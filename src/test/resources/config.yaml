@@ -1,0 +1,15 @@
+#URIs
+
+dev:
+  base-uri: https://dev.example.com
+  base-uri-port: 8080
+  auth-base-uri: https://devauth.example.com
+  auth-endpoint: /openid-connect/token
+  auth-client-id: test-client
+  auth-username: dev
+  auth-password: pass123
+qa:
+  base-uri: https://qa.example.com
+prod:
+  base-uri: https://prod.example.com
+

@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.qameta.allure:allure-gradle:2.5"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'io.qameta.allure'
+
+group 'fc.connvex.testing'
+version '1.0-SNAPSHOT'
+
+//repositories {
+//    mavenCentral()
+//    jcenter()
+//}
+
+
+repositories {
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+
+dependencies {
+    testCompile group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    testCompile group: 'io.qameta.allure', name: 'allure-cucumber3-jvm', version: cucumberAllureVersion
+    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: cucumberVersion
+    testCompile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: jacksonVersion
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
+    testCompile group: 'io.rest-assured', name: 'json-schema-validator', version: restAssuredVersion
+    testCompile group: 'info.cukes', name: 'cucumber-picocontainer', version: cucumberPicoContainerVersion
+    testCompile group: 'junit', name: 'junit', version: junitVersion
+    testCompile group: 'org.tinylog', name: 'tinylog', version: tinylogVersion
+    testCompile group: 'org.assertj', name: 'assertj-core', version: assertJVersion
+}
+
+task cucumber(dependsOn: testClasses) {
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'StepDefinitions', 'src/test/resources']
+        }
+    }
+}
+
+
+task cucumberRegression(dependsOn: testClasses) {
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--tags', '@regression', '--glue', 'StepDefinitions', 'src/test/resources']
+        }
+    }
+}
+
+task cucumberSmoke(dependsOn: testClasses) {
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--tags', '@smoke', '--glue', 'StepDefinitions', 'src/test/resources']
+        }
+    }
+}
+
+
+
+
